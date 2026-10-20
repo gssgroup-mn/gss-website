@@ -1,26 +1,114 @@
 @import "tailwindcss";
+@import "@fontsource-variable/geologica";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  GSS design tokens
+  - ink:    control-room slate, used for text and dark bands
+  - paper:  cool studio grey page background
+  - steel:  secondary text
+  - line:   hairlines and borders
+  - tally:  the on-air light. Used only for the primary action and "live" states.
+  The SMPTE colour-bar strip is the one decorative signature; nothing else is coloured.
+*/
+@theme {
+  --color-ink: #17212c;
+  --color-ink-2: #243241;
+  --color-paper: #f4f6f8;
+  --color-white: #ffffff;
+  --color-steel: #5a6776;
+  --color-line: #d8dee5;
+  --color-tally: #d92a1c;
+  --color-tally-dark: #b32014;
+
+  --font-display: "Geologica Variable", "IBM Plex Sans", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+
+  /* Type scale (1.25, Bringhurst-style rhythm on a 16px base) */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+  --text-4xl: 3.052rem;
+  --text-5xl: 3.815rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-tally);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* SMPTE-style colour bars: the brand signature */
+.signal-bars {
+  background: linear-gradient(
+    90deg,
+    #c0c0c0 0 14.28%,
+    #c0c000 14.28% 28.57%,
+    #00c0c0 28.57% 42.85%,
+    #00c000 42.85% 57.14%,
+    #c000c0 57.14% 71.42%,
+    #c00000 71.42% 85.71%,
+    #0000c0 85.71% 100%
+  );
+}
+
+.container-site {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .container-site {
+    padding-inline: 2rem;
+  }
+}
+
+.measure {
+  max-width: 38rem;
 }
