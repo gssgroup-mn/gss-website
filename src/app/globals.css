@@ -112,3 +112,18 @@ p {
 .measure {
   max-width: 38rem;
 }
+
+/* Design option B preview: swap the header/footer accent to studio blue and drop the colour bars. */
+body:has(.theme-b) .bg-tally {
+  background-color: #1e4fd8;
+}
+body:has(.theme-b) .hover\:bg-tally-dark:hover {
+  background-color: #173fae;
+}
+body:has(.theme-b) .signal-bars {
+  display: none;
+}
+body:has(.theme-b) .text-tally,
+body:has(.theme-b) .hover\:text-tally:hover {
+  color: #1e4fd8;
+}
