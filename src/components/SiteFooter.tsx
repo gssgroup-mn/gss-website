@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { company, pages, ui, type Locale } from "@/content/site";
 import { href, t } from "@/lib/i18n";
+import Logo from "@/components/Logo";
 
 const L = {
   tagline: {
@@ -25,7 +26,7 @@ export default function SiteFooter({ lang }: { lang: Locale }) {
       <div className="signal-bars h-1" aria-hidden="true" />
       <div className="container-site grid gap-10 py-14 md:grid-cols-12">
         <div className="md:col-span-4">
-          <p className="font-display text-2xl font-[650] text-white">GSS</p>
+          <Logo className="h-12 w-auto text-white" />
           <p className="mt-3 max-w-xs text-sm">{t(L.tagline, lang)}</p>
           <p className="mt-6 text-sm">
             <a href={company.group} className="underline decoration-white/30 underline-offset-4 hover:text-white" target="_blank" rel="noopener">

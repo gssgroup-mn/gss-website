@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { company, pages, ui, type Locale } from "@/content/site";
 import { href, otherLocale, t } from "@/lib/i18n";
+import Logo from "@/components/Logo";
 
 export default function SiteHeader({ lang }: { lang: Locale }) {
   const pathname = usePathname() || `/${lang}/`;
@@ -43,21 +44,19 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-line">
-      <div className="signal-bars h-1" aria-hidden="true" />
-      <div className="container-site flex h-16 items-center gap-6">
-        <Link href={href(lang)} className="flex items-baseline gap-2 shrink-0" aria-label={`${company.short} — ${t(ui.home, lang)}`}>
-          <span className="font-display text-2xl font-[650] tracking-tight">GSS</span>
-          <span className="hidden sm:inline text-xs text-steel">Globalsmart Solution</span>
+      <div className="container-site flex h-[72px] items-center gap-6">
+        <Link href={href(lang)} className="flex items-center shrink-0" aria-label={`${company.short} — ${t(ui.home, lang)}`}>
+          <Logo className="h-10 w-auto text-brand" />
         </Link>
 
-        <nav className="hidden xl:block flex-1" aria-label="Main">
-          <ul className="flex items-center gap-1">
+        <nav className="hidden lg:block flex-1" aria-label="Main">
+          <ul className="flex items-center justify-center gap-2">
             {nav.map((p) =>
               p.slug === "solutions" && solutions ? (
                 <li key={p.slug} className="relative" ref={solutionsRef}>
                   <button
                     type="button"
-                    className={`whitespace-nowrap px-3 py-2 text-sm font-medium hover:text-tally ${isActive(p.slug) ? "text-tally" : ""}`}
+                    className={`whitespace-nowrap px-3 py-2 text-sm font-medium hover:text-brand ${isActive(p.slug) ? "text-brand" : ""}`}
                     aria-expanded={solutionsOpen}
                     aria-controls="solutions-menu"
                     onClick={() => setSolutionsOpen((v) => !v)}
@@ -68,32 +67,20 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
                   {solutionsOpen && (
                     <div
                       id="solutions-menu"
-                      className="absolute left-0 top-full mt-2 w-[44rem] rounded-md border border-line bg-white p-6 shadow-[0_12px_32px_-12px_rgba(23,33,44,0.25)]"
+                      className="absolute left-0 top-full mt-2 w-60 rounded-md border border-line bg-white py-2 shadow-[0_12px_32px_-12px_rgba(23,33,44,0.25)]"
                     >
-                      <div className="grid grid-cols-3 gap-6">
+                      <ul>
                         {solutions.children?.map((group) => (
-                          <div key={group.slug}>
+                          <li key={group.slug}>
                             <Link
                               href={href(lang, ["solutions", group.slug])}
-                              className="font-display text-base font-semibold hover:text-tally"
+                              className="block px-4 py-2.5 text-sm hover:bg-paper hover:text-brand"
                             >
                               {t(group.title, lang)}
                             </Link>
-                            <ul className="mt-3 space-y-2 border-l border-line pl-3">
-                              {group.children?.map((c) => (
-                                <li key={c.slug}>
-                                  <Link
-                                    href={href(lang, ["solutions", group.slug, c.slug])}
-                                    className="text-sm text-steel hover:text-ink"
-                                  >
-                                    {t(c.title, lang)}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
                   )}
                 </li>
@@ -101,7 +88,7 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
                 <li key={p.slug}>
                   <Link
                     href={href(lang, [p.slug])}
-                    className={`whitespace-nowrap px-3 py-2 text-sm font-medium hover:text-tally ${isActive(p.slug) ? "text-tally" : ""}`}
+                    className={`whitespace-nowrap px-3 py-2 text-sm font-medium hover:text-brand ${isActive(p.slug) ? "text-brand" : ""}`}
                     aria-current={isActive(p.slug) ? "page" : undefined}
                   >
                     {t(p.title, lang)}
@@ -112,19 +99,13 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
           </ul>
         </nav>
 
-        <div className="ml-auto hidden xl:flex items-center gap-4 whitespace-nowrap text-sm">
-          <a href={company.store} className="text-steel hover:text-ink" target="_blank" rel="noopener">
-            {t(ui.store, lang)}
-          </a>
-          <Link href={href(lang, ["support"])} className="text-steel hover:text-ink">
-            {t(ui.support, lang)}
-          </Link>
+        <div className="ml-auto hidden lg:flex items-center gap-5 whitespace-nowrap text-sm">
           <Link href={switchHref} className="text-steel hover:text-ink" hrefLang={otherLocale(lang)}>
             {t(ui.language, lang)}
           </Link>
           <Link
             href={href(lang, ["contact"])}
-            className="rounded-sm bg-tally px-4 py-2 font-medium text-white hover:bg-tally-dark"
+            className="rounded-md bg-brand px-4 py-2 font-medium text-white hover:brightness-110"
           >
             {t(ui.quote, lang)}
           </Link>
@@ -132,7 +113,7 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
 
         <button
           type="button"
-          className="ml-auto xl:hidden rounded-sm border border-line px-3 py-2 text-sm"
+          className="ml-auto lg:hidden rounded-sm border border-line px-3 py-2 text-sm"
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((v) => !v)}
@@ -142,7 +123,7 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
       </div>
 
       {open && (
-        <div id="mobile-menu" className="xl:hidden border-t border-line bg-white">
+        <div id="mobile-menu" className="lg:hidden border-t border-line bg-white">
           <nav className="container-site py-4" aria-label="Mobile">
             <ul className="space-y-1">
               {nav.map((p) => (
@@ -165,16 +146,10 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
               ))}
             </ul>
             <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-line pt-4 text-sm">
-              <a href={company.store} target="_blank" rel="noopener" className="text-steel">
-                {t(ui.store, lang)}
-              </a>
-              <Link href={href(lang, ["support"])} className="text-steel">
-                {t(ui.support, lang)}
-              </Link>
               <Link href={switchHref} className="text-steel" hrefLang={otherLocale(lang)}>
                 {t(ui.language, lang)}
               </Link>
-              <Link href={href(lang, ["contact"])} className="w-full rounded-sm bg-tally px-4 py-3 text-center font-medium text-white">
+              <Link href={href(lang, ["contact"])} className="w-full rounded-md bg-brand px-4 py-3 text-center font-medium text-white">
                 {t(ui.quote, lang)}
               </Link>
             </div>

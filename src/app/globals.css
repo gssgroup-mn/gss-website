@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@import "@fontsource-variable/geologica";
-@import "@fontsource/ibm-plex-sans/400.css";
-@import "@fontsource/ibm-plex-sans/500.css";
-@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/arimo/400.css";
+@import "@fontsource/arimo/500.css";
+@import "@fontsource/arimo/600.css";
+@import "@fontsource/arimo/700.css";
 
 /*
   GSS design tokens
@@ -23,8 +23,10 @@
   --color-tally: #d92a1c;
   --color-tally-dark: #b32014;
 
-  --font-display: "Geologica Variable", "IBM Plex Sans", system-ui, sans-serif;
-  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  /* One typeface everywhere (matches the logo tagline, Arial-metric, full Mongolian Cyrillic) */
+  --font-display: "Arimo", Arial, "Liberation Sans", sans-serif;
+  --font-sans: "Arimo", Arial, "Liberation Sans", sans-serif;
+  --color-brand: #0077b6;
 
   /* Type scale (1.25, Bringhurst-style rhythm on a 16px base) */
   --text-xs: 0.8125rem;

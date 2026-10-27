@@ -139,7 +139,6 @@ export const pages: PageNode[] = [
   },
   {
     slug: "partners",
-    inNav: true,
     title: { mn: "Түншүүд", en: "Partners" },
     summary: {
       mn: "Бидний албан ёсоор төлөөлдөг брэндүүд.",
@@ -178,12 +177,12 @@ export const pages: PageNode[] = [
   },
   {
     slug: "news",
-    inNav: true,
     title: { mn: "Мэдээ", en: "News" },
     summary: { mn: "Шинэ бүтээгдэхүүн, төсөл, арга хэмжээ.", en: "New products, projects and events." },
   },
   {
     slug: "contact",
+    inNav: true,
     title: { mn: "Холбоо барих", en: "Contact" },
     summary: {
       mn: "Хэрэгцээгээ бичээд үлдээгээрэй. Манай борлуулалтын инженер ажлын 1 өдрийн дотор холбогдоно.",
