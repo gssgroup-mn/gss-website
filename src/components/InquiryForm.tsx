@@ -13,6 +13,13 @@ const L = {
   contact: { mn: "Холбогдох хүн", en: "Contact person" },
   phone: { mn: "Утас", en: "Phone" },
   email: { mn: "Имэйл", en: "Email" },
+  type: { mn: "Хүсэлтийн төрөл", en: "Request type" },
+  types: [
+    { v: "quote", mn: "Үнийн санал", en: "Quotation" },
+    { v: "service", mn: "Засвар үйлчилгээ", en: "Repair / service" },
+    { v: "demo", mn: "Демо захиалах", en: "Demo" },
+    { v: "cooperation", mn: "Хамтын ажиллагаа", en: "Cooperation" },
+  ],
   interest: { mn: "Сонирхож буй шийдэл", en: "Solution of interest" },
   notSure: { mn: "Мэдэхгүй байна, зөвлөгөө авъя", en: "Not sure yet, I need advice" },
   request: { mn: "Юу хэрэгтэй байна вэ?", en: "What do you need?" },
@@ -90,6 +97,16 @@ export default function InquiryForm({ lang, compact = false }: { lang: Locale; c
         </label>
       </div>
       <label className={label}>
+        {t(L.type, lang)}
+        <select name="requestType" className={field} defaultValue="quote">
+          {L.types.map((o) => (
+            <option key={o.v} value={o.v}>
+              {o[lang]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className={label}>
         {t(L.interest, lang)}
         <select name="interest" className={field} defaultValue="">
           <option value="">{t(L.notSure, lang)}</option>
@@ -119,7 +136,7 @@ export default function InquiryForm({ lang, compact = false }: { lang: Locale; c
         <button
           type="submit"
           disabled={status === "sending"}
-          className="rounded-sm bg-tally px-6 py-3 font-medium text-white hover:bg-tally-dark disabled:opacity-60"
+          className="rounded-md bg-brand px-6 py-3 font-semibold text-white hover:brightness-110 disabled:opacity-60"
         >
           {status === "sending" ? t(L.sending, lang) : t(L.send, lang)}
         </button>

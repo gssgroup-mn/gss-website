@@ -139,7 +139,8 @@ export const pages: PageNode[] = [
   },
   {
     slug: "partners",
-    title: { mn: "Түншүүд", en: "Partners" },
+    inNav: true,
+    title: { mn: "Хамтрагч брэндүүд", en: "Partner Brands" },
     summary: {
       mn: "Бидний албан ёсоор төлөөлдөг брэндүүд.",
       en: "The brands we officially represent.",
@@ -182,42 +183,11 @@ export const pages: PageNode[] = [
   },
   {
     slug: "contact",
-    inNav: true,
     title: { mn: "Холбоо барих", en: "Contact" },
     summary: {
       mn: "Хэрэгцээгээ бичээд үлдээгээрэй. Манай борлуулалтын инженер ажлын 1 өдрийн дотор холбогдоно.",
       en: "Tell us what you need. A sales engineer will contact you within one working day.",
     },
-  },
-  {
-    slug: "support",
-    title: { mn: "Тусламж", en: "Support" },
-    summary: {
-      mn: "Засвар үйлчилгээ, инженерийн зөвлөгөө, демо болон хамтын ажиллагааны хүсэлт.",
-      en: "Service, engineering advice, demos and cooperation requests.",
-    },
-    children: [
-      {
-        slug: "ticket",
-        title: { mn: "Засварын хүсэлт", en: "Create a Ticket" },
-        summary: { mn: "Төхөөрөмжийн засвар, баталгааны хүсэлт илгээх.", en: "Request repair or warranty service." },
-      },
-      {
-        slug: "service-engineer",
-        title: { mn: "Инженертэй холбогдох", en: "Contact a Service Engineer" },
-        summary: { mn: "Суурилуулалт, тохиргооны талаар инженерээс зөвлөгөө авах.", en: "Get advice on installation and setup." },
-      },
-      {
-        slug: "request-demo",
-        title: { mn: "Демо захиалах", en: "Request a Demo" },
-        summary: { mn: "Шоурүм эсвэл таны байранд үзүүлэн туршилт хийлгэх.", en: "Book a demo in our showroom or at your site." },
-      },
-      {
-        slug: "cooperation",
-        title: { mn: "Хамтран ажиллах", en: "Request Cooperation" },
-        summary: { mn: "Түнш, гэрээт гүйцэтгэгч, дистрибьютороор хамтрах санал.", en: "Partner, contractor or distribution proposals." },
-      },
-    ],
   },
 ];
 

@@ -19,7 +19,6 @@ const L = {
 export default function SiteFooter({ lang }: { lang: Locale }) {
   const solutions = pages.find((p) => p.slug === "solutions");
   const company_ = pages.filter((p) => ["partners", "projects", "about", "news"].includes(p.slug));
-  const support = pages.find((p) => p.slug === "support");
 
   return (
     <footer className="mt-24 bg-ink text-white/80">
@@ -67,17 +66,7 @@ export default function SiteFooter({ lang }: { lang: Locale }) {
         </nav>
 
         <div className="md:col-span-3">
-          <p className="font-display text-sm font-semibold text-white">{t(support!.title, lang)}</p>
-          <ul className="mt-3 space-y-2 text-sm">
-            {support!.children!.map((c) => (
-              <li key={c.slug}>
-                <Link href={href(lang, ["support", c.slug])} className="hover:text-white">
-                  {t(c.title, lang)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 font-display text-sm font-semibold text-white">{t(L.contact, lang)}</p>
+          <p className="font-display text-sm font-semibold text-white">{t(L.contact, lang)}</p>
           <p className="mt-2 text-sm text-white/60">{t(L.pendingContact, lang)}</p>
         </div>
       </div>

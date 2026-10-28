@@ -112,7 +112,7 @@ export default async function HomeB({ params }: { params: Promise<{ lang: Locale
             <Link href={href(lang, ["contact"])} className="rounded-full px-6 py-3 font-medium text-white" style={{ background: blue }}>
               {t(ui.quote, lang)}
             </Link>
-            <Link href={href(lang, ["support", "request-demo"])} className="rounded-full border border-[#14202b]/20 px-6 py-3 font-medium hover:border-[#14202b]">
+            <Link href={href(lang, ["contact"])} className="rounded-full border border-[#14202b]/20 px-6 py-3 font-medium hover:border-[#14202b]">
               {t(copy.demo, lang)}
             </Link>
           </div>
@@ -188,7 +188,7 @@ export default async function HomeB({ params }: { params: Promise<{ lang: Locale
           <div className="border-t border-[#dce3ec] py-14 md:border-l md:border-t-0 md:pl-12">
             <h2 className="text-2xl font-[480] md:text-3xl">{t(copy.showroomH, lang)}</h2>
             <p className="mt-4 text-lg text-steel measure">{t(copy.showroom, lang)}</p>
-            <Link href={href(lang, ["support", "request-demo"])} className="mt-6 inline-block rounded-full px-5 py-2.5 text-sm font-medium text-white" style={{ background: blue }}>
+            <Link href={href(lang, ["contact"])} className="mt-6 inline-block rounded-full px-5 py-2.5 text-sm font-medium text-white" style={{ background: blue }}>
               {t(copy.demo, lang)}
             </Link>
           </div>

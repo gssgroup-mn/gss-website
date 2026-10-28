@@ -14,7 +14,8 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
   const solutionsRef = useRef<HTMLLIElement>(null);
 
   const switchHref = pathname.replace(/^\/(mn|en)(?=\/|$)/, `/${otherLocale(lang)}`);
-  const nav = pages.filter((p) => p.inNav);
+  const NAV_ORDER = ["solutions", "projects", "about", "partners"];
+  const nav = NAV_ORDER.map((slug) => pages.find((p) => p.slug === slug && p.inNav)).filter((p): p is NonNullable<typeof p> => Boolean(p));
   const solutions = pages.find((p) => p.slug === "solutions");
 
   useEffect(() => {
@@ -44,13 +45,13 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-line">
-      <div className="container-site flex h-[72px] items-center gap-6">
+      <div className="mx-auto flex h-[72px] w-full max-w-[90rem] items-center gap-6 px-4 lg:px-6">
         <Link href={href(lang)} className="flex items-center shrink-0" aria-label={`${company.short} — ${t(ui.home, lang)}`}>
           <Logo className="h-10 w-auto text-brand" />
         </Link>
 
-        <nav className="hidden lg:block flex-1" aria-label="Main">
-          <ul className="flex items-center justify-center gap-2">
+        <nav className="ml-auto hidden lg:block" aria-label="Main">
+          <ul className="flex items-center gap-1">
             {nav.map((p) =>
               p.slug === "solutions" && solutions ? (
                 <li key={p.slug} className="relative" ref={solutionsRef}>
@@ -99,10 +100,20 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
           </ul>
         </nav>
 
-        <div className="ml-auto hidden lg:flex items-center gap-5 whitespace-nowrap text-sm">
+        <div className="hidden lg:flex items-center gap-4 whitespace-nowrap border-l border-line pl-5 text-sm">
           <Link href={switchHref} className="text-steel hover:text-ink" hrefLang={otherLocale(lang)}>
             {t(ui.language, lang)}
           </Link>
+          <a
+            href={company.store}
+            target="_blank"
+            rel="noopener"
+            title={t(ui.store, lang)}
+            aria-label={t(ui.store, lang)}
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-ink hover:border-brand hover:text-brand"
+          >
+            <StoreIcon className="h-5 w-5" />
+          </a>
           <Link
             href={href(lang, ["contact"])}
             className="rounded-md bg-brand px-4 py-2 font-medium text-white hover:brightness-110"
@@ -149,6 +160,9 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
               <Link href={switchHref} className="text-steel" hrefLang={otherLocale(lang)}>
                 {t(ui.language, lang)}
               </Link>
+              <a href={company.store} target="_blank" rel="noopener" className="flex items-center gap-2 text-ink">
+                <StoreIcon className="h-5 w-5" /> {t(ui.store, lang)}
+              </a>
               <Link href={href(lang, ["contact"])} className="w-full rounded-md bg-brand px-4 py-3 text-center font-medium text-white">
                 {t(ui.quote, lang)}
               </Link>
@@ -157,5 +171,15 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
         </div>
       )}
     </header>
+  );
+}
+
+function StoreIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.1L21 8H6.2" />
+      <circle cx="10" cy="20" r="1.3" />
+      <circle cx="17" cy="20" r="1.3" />
+    </svg>
   );
 }

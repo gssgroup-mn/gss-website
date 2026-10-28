@@ -25,7 +25,7 @@ const solutionContent: Text = {
   en: "Solution text and product list — Sales/Marketing",
 };
 
-const formPages = new Set(["contact", "ticket", "service-engineer", "request-demo", "cooperation"]);
+const formPages = new Set(["contact"]);
 
 export default async function Page({ params }: Props) {
   const { lang, slug } = await params;
