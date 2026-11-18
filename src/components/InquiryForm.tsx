@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { pages, type Locale } from "@/content/site";
 import { t } from "@/lib/i18n";
 
@@ -50,6 +50,19 @@ type Status = "idle" | "sending" | "sent" | "failed" | "staging";
 export default function InquiryForm({ lang, compact = false }: { lang: Locale; compact?: boolean }) {
   const [status, setStatus] = useState<Status>("idle");
   const groups = pages.find((p) => p.slug === "solutions")?.children ?? [];
+  const requestRef = useRef<HTMLTextAreaElement>(null);
+  const interestRef = useRef<HTMLSelectElement>(null);
+
+  // Tools such as the LED calculator link here with their result, e.g. ?interest=…&request=…
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const req = q.get("request");
+    const interest = q.get("interest");
+    if (req && requestRef.current && !requestRef.current.value) requestRef.current.value = req.slice(0, 2000);
+    if (interest && interestRef.current && [...interestRef.current.options].some((o) => o.value === interest)) {
+      interestRef.current.value = interest;
+    }
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -108,7 +121,7 @@ export default function InquiryForm({ lang, compact = false }: { lang: Locale; c
       </label>
       <label className={label}>
         {t(L.interest, lang)}
-        <select name="interest" className={field} defaultValue="">
+        <select ref={interestRef} name="interest" className={field} defaultValue="">
           <option value="">{t(L.notSure, lang)}</option>
           {groups.map((g) => (
             <optgroup key={g.slug} label={t(g.title, lang)}>
@@ -125,7 +138,7 @@ export default function InquiryForm({ lang, compact = false }: { lang: Locale; c
       </label>
       <label className={label}>
         {t(L.request, lang)} <span className="text-steel font-normal">({t(L.required, lang)})</span>
-        <textarea name="request" required rows={4} placeholder={t(L.requestHint, lang)} className={field} />
+        <textarea ref={requestRef} name="request" required rows={4} placeholder={t(L.requestHint, lang)} className={field} />
       </label>
       <label className={`${label} max-w-xs`}>
         {t(L.needed, lang)}

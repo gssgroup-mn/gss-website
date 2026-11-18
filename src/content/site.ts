@@ -138,6 +138,15 @@ export const pages: PageNode[] = [
     ],
   },
   {
+    slug: "led-calculator",
+    inNav: true,
+    title: { mn: "LED тооцоолуур", en: "LED calculator" },
+    summary: {
+      mn: "Дэлгэцийн хэмжээ, пикселийн алхмаа сонгоод кабинетын тоо, нягтрал, харах зайг шууд хараарай.",
+      en: "Choose a size and pixel pitch to see cabinet count, resolution and viewing distance instantly.",
+    },
+  },
+  {
     slug: "partners",
     inNav: true,
     title: { mn: "Хамтрагч брэндүүд", en: "Partner Brands" },

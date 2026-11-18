@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import InquiryForm from "@/components/InquiryForm";
+import LedCalculator from "@/components/LedCalculator";
+import LiveAudioSolution from "@/components/LiveAudioSolution";
+import ConferenceRooms from "@/components/ConferenceRooms";
 import { findByPath, flatten, locales, ui, type Locale, type Text } from "@/content/site";
 import { href, t } from "@/lib/i18n";
 
@@ -27,6 +30,42 @@ const solutionContent: Text = {
 
 const formPages = new Set(["contact"]);
 
+// Pages that carry their own quote button; the generic band below would repeat it.
+const ownCta = new Set(["led-calculator", "solutions/proav/live-audio", "solutions/corporate/conference-rooms"]);
+
+// Pages with their own content below the page title, keyed by path.
+const extras: Record<string, (lang: Locale) => React.ReactNode> = {
+  "led-calculator": (lang) => (
+    <section className="container-site py-10 md:py-14">
+      <LedCalculator lang={lang} />
+    </section>
+  ),
+  "solutions/proav/live-audio": (lang) => <LiveAudioSolution lang={lang} />,
+  "solutions/corporate/conference-rooms": (lang) => <ConferenceRooms lang={lang} />,
+  "solutions/corporate/displays-led-projection": (lang) => (
+    <section className="container-site pt-12">
+      <Link
+        href={href(lang, ["led-calculator"])}
+        className="group grid items-center gap-6 rounded-lg border border-line bg-white p-6 hover:border-brand md:grid-cols-[minmax(0,1fr)_auto] md:p-8"
+      >
+        <span>
+          <span className="block text-xl font-bold group-hover:text-brand">
+            {lang === "mn" ? "LED дэлгэцээ өөрөө тооцоолоод үзээрэй" : "Work out your LED screen yourself"}
+          </span>
+          <span className="mt-1 block text-steel">
+            {lang === "mn"
+              ? "Хэмжээ, пикселийн алхмаа сонгоход кабинетын тоо, нягтрал, харах зай шууд гарна."
+              : "Pick a size and pixel pitch to see cabinets, resolution and viewing distance."}
+          </span>
+        </span>
+        <span className="rounded-md bg-brand px-5 py-3 text-center font-semibold text-white">
+          {lang === "mn" ? "Тооцоолуур нээх" : "Open the calculator"}
+        </span>
+      </Link>
+    </section>
+  ),
+};
+
 export default async function Page({ params }: Props) {
   const { lang, slug } = await params;
   const found = findByPath(slug);
@@ -34,7 +73,8 @@ export default async function Page({ params }: Props) {
   const { node, parents, path } = found;
   const children = node.children ?? [];
   const isSolutionLeaf = path[0] === "solutions" && children.length === 0;
-  const owner = node.contentOwner ?? (isSolutionLeaf ? solutionContent : undefined);
+  const extra = extras[path.join("/")];
+  const owner = node.contentOwner ?? (isSolutionLeaf && !extra ? solutionContent : undefined);
   const showForm = formPages.has(node.slug);
 
   return (
@@ -68,6 +108,8 @@ export default async function Page({ params }: Props) {
         </div>
       </section>
 
+      {extra?.(lang)}
+
       {children.length > 0 && (
         <section className="container-site py-12">
           <ul className="divide-y divide-line border-y border-line">
@@ -91,7 +133,7 @@ export default async function Page({ params }: Props) {
         </section>
       )}
 
-      {showForm ? (
+      {ownCta.has(path.join("/")) ? null : showForm ? (
         <section className="container-site py-12">
           <div className="max-w-3xl rounded-md border border-line bg-white p-6 md:p-10">
             <InquiryForm lang={lang} />

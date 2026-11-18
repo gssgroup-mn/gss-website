@@ -14,7 +14,7 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
   const solutionsRef = useRef<HTMLLIElement>(null);
 
   const switchHref = pathname.replace(/^\/(mn|en)(?=\/|$)/, `/${otherLocale(lang)}`);
-  const NAV_ORDER = ["solutions", "projects", "about", "partners"];
+  const NAV_ORDER = ["solutions", "led-calculator", "projects", "about", "partners"];
   const nav = NAV_ORDER.map((slug) => pages.find((p) => p.slug === slug && p.inNav)).filter((p): p is NonNullable<typeof p> => Boolean(p));
   const solutions = pages.find((p) => p.slug === "solutions");
 
