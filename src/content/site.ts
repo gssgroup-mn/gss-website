@@ -138,6 +138,15 @@ export const pages: PageNode[] = [
     ],
   },
   {
+    slug: "studio",
+    inNav: true,
+    title: { mn: "Тайзны 3D төлөвлөгч", en: "3D stage planner" },
+    summary: {
+      mn: "Заал, тайз, дэлгэцийнхээ хэмжээг оруулаад тохирох тоног төхөөрөмж, байрлал, кабелийн холболтоо өөрөө төлөвлөөрэй.",
+      en: "Enter your hall, stage and screen sizes, then plan the equipment, placement and cabling yourself.",
+    },
+  },
+  {
     slug: "led-calculator",
     inNav: true,
     title: { mn: "LED тооцоолуур", en: "LED calculator" },

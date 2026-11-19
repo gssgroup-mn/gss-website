@@ -5,6 +5,7 @@ import InquiryForm from "@/components/InquiryForm";
 import LedCalculator from "@/components/LedCalculator";
 import LiveAudioSolution from "@/components/LiveAudioSolution";
 import ConferenceRooms from "@/components/ConferenceRooms";
+import StageStudio from "@/components/studio/StageStudio";
 import { findByPath, flatten, locales, ui, type Locale, type Text } from "@/content/site";
 import { href, t } from "@/lib/i18n";
 
@@ -31,7 +32,7 @@ const solutionContent: Text = {
 const formPages = new Set(["contact"]);
 
 // Pages that carry their own quote button; the generic band below would repeat it.
-const ownCta = new Set(["led-calculator", "solutions/proav/live-audio", "solutions/corporate/conference-rooms"]);
+const ownCta = new Set(["studio", "led-calculator", "solutions/proav/live-audio", "solutions/corporate/conference-rooms"]);
 
 // Pages with their own content below the page title, keyed by path.
 const extras: Record<string, (lang: Locale) => React.ReactNode> = {
@@ -40,6 +41,7 @@ const extras: Record<string, (lang: Locale) => React.ReactNode> = {
       <LedCalculator lang={lang} />
     </section>
   ),
+  studio: (lang) => <StageStudio lang={lang} />,
   "solutions/proav/live-audio": (lang) => <LiveAudioSolution lang={lang} />,
   "solutions/corporate/conference-rooms": (lang) => <ConferenceRooms lang={lang} />,
   "solutions/corporate/displays-led-projection": (lang) => (

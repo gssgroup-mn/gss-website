@@ -192,6 +192,9 @@ export default function LiveAudioSolution({ lang }: { lang: Locale }) {
               >
                 {t(c.easeAsk, lang)}
               </Link>
+              <Link href={href(lang, ["studio"])} className="rounded-md border border-white/40 px-6 py-3 font-semibold text-white hover:border-white">
+                {lang === "mn" ? "Тайзаа өөрөө 3D-ээр төлөвлөх" : "Plan your stage in 3D"}
+              </Link>
               <a
                 href="https://www.afmg.eu/en/ease-focus"
                 target="_blank"
