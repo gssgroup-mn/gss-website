@@ -73,14 +73,17 @@ export default function InquiryForm({ lang, compact = false }: { lang: Locale; c
     }
     setStatus("sending");
     try {
+      // text/plain keeps this a "simple" cross-origin request (no CORS preflight);
+      // the Power Automate flow parses the JSON body itself.
+      const form = e.currentTarget;
       const res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
         body: JSON.stringify({ ...data, source: "Вэбсайт", lang }),
       });
       if (!res.ok) throw new Error(String(res.status));
       setStatus("sent");
-      e.currentTarget.reset();
+      form.reset();
     } catch {
       setStatus("failed");
     }
@@ -91,6 +94,13 @@ export default function InquiryForm({ lang, compact = false }: { lang: Locale; c
 
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate={false}>
+      {/* Spam trap: hidden from people, bots fill it in and the flow ignores the request. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+        <label>
+          Website
+          <input name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+        </label>
+      </div>
       <div className={`grid gap-5 ${compact ? "" : "sm:grid-cols-2"}`}>
         <label className={label}>
           {t(L.org, lang)} <span className="text-steel font-normal">({t(L.required, lang)})</span>
