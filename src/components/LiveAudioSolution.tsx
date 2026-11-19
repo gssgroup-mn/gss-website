@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Locale, Text } from "@/content/site";
 import { href, t } from "@/lib/i18n";
 import PendingNote from "@/components/PendingNote";
+import HallViews from "@/components/HallViews";
 
 const venues: { title: Text; body: Text }[] = [
   {
@@ -180,7 +181,7 @@ export default function LiveAudioSolution({ lang }: { lang: Locale }) {
 
       {/* EASE Focus */}
       <section id="ease-focus" className="bg-ink text-white">
-        <div className="container-site grid gap-10 py-14 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:py-16">
+        <div className="container-site py-14 md:py-16">
           <div>
             <h2 className="text-2xl font-bold md:text-3xl">{t(c.easeH, lang)}</h2>
             <p className="mt-4 text-white/80 measure">{t(c.easeBody, lang)}</p>
@@ -203,7 +204,9 @@ export default function LiveAudioSolution({ lang }: { lang: Locale }) {
             <p className="mt-3 text-sm text-white/60">{t(c.easeDlNote, lang)}</p>
             <PendingNote dark text={c.easePending} lang={lang} />
           </div>
-          <CoverageSketch />
+          <div className="mt-10">
+            <HallViews lang={lang} />
+          </div>
         </div>
       </section>
 
@@ -211,35 +214,5 @@ export default function LiveAudioSolution({ lang }: { lang: Locale }) {
         <PendingNote text={c.projectsPending} lang={lang} />
       </div>
     </>
-  );
-}
-
-/* A side view of a hall: one hung array, the audience rake, and coverage bands thinning towards the back. */
-function CoverageSketch() {
-  const bands = ["#2dd4bf", "#34d399", "#a3e635", "#facc15", "#fb923c"];
-  return (
-    <svg viewBox="0 0 320 200" className="h-auto w-full self-center" role="img" aria-label="Coverage sketch">
-      <rect x="0" y="0" width="320" height="200" rx="8" fill="#243241" />
-      {/* audience rake */}
-      <path d="M 70 172 L 300 132 L 300 186 L 70 186 Z" fill="#17212c" />
-      {bands.map((col, i) => {
-        const x0 = 70 + i * 46;
-        const x1 = x0 + 46;
-        const y0 = 172 - (x0 - 70) * (40 / 230);
-        const y1 = 172 - (x1 - 70) * (40 / 230);
-        return <path key={col} d={`M ${x0} ${y0} L ${x1} ${y1} L ${x1} ${y1 + 6} L ${x0} ${y0 + 6} Z`} fill={col} />;
-      })}
-      {/* rays from the array */}
-      {[0, 1, 2, 3, 4].map((i) => (
-        <line key={i} x1="48" y1={46 + i * 9} x2={100 + i * 46} y2={168 - i * 8} stroke="#ffffff" strokeOpacity="0.14" strokeWidth="1" />
-      ))}
-      {/* hung line array */}
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <rect key={i} x={36 + i * 1.6} y={38 + i * 9} width="20" height="8" rx="1" fill="#d8dee5" transform={`rotate(${i * 4} ${46 + i * 1.6} ${42 + i * 9})`} />
-      ))}
-      <line x1="46" y1="14" x2="46" y2="38" stroke="#d8dee5" strokeWidth="1.5" />
-      {/* stage */}
-      <rect x="14" y="160" width="56" height="26" fill="#5a6776" />
-    </svg>
   );
 }

@@ -1,9 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import type { Locale, Text } from "@/content/site";
 import { href, t } from "@/lib/i18n";
+
+// three.js loads only when someone opens the 3D view.
+const LedScene3D = dynamic(() => import("@/components/three/LedScene3D"), {
+  ssr: false,
+  loading: () => <div className="grid aspect-[16/10] place-items-center text-sm text-steel">…</div>,
+});
+
+type View = "2d" | "3d" | "plan";
+
+function hasWebGL() {
+  try {
+    const c = document.createElement("canvas");
+    return !!(c.getContext("webgl2") || c.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
 
 /*
   LED wall calculator.
@@ -74,6 +92,20 @@ const L = {
   },
   m: { mn: "м", en: "m" },
   m2: { mn: "м²", en: "m²" },
+  views: { mn: "Харагдац", en: "View" },
+  v2d: { mn: "2D", en: "2D" },
+  v3d: { mn: "3D", en: "3D" },
+  vPlan: { mn: "План", en: "Plan" },
+  eye: { mn: "Үзэгчийн нүдээр харах", en: "View from the audience" },
+  overview: { mn: "Ерөнхий харагдац", en: "Overview" },
+  drag: { mn: "Чирж эргүүлнэ, хуруугаараа эсвэл хулганаар томруулна.", en: "Drag to rotate, pinch or scroll to zoom." },
+  no3d: { mn: "Энэ төхөөрөмж 3D дэмжихгүй байна.", en: "3D isn't supported on this device." },
+  tooClose: { mn: "Хэт ойр", en: "Too close" },
+  okZone: { mn: "Харж болно", en: "Fine" },
+  best: { mn: "Хамгийн тохиромжтой", en: "Best" },
+  screen: { mn: "Дэлгэц", en: "Screen" },
+  viewer: { mn: "Таны үзэгч", en: "Your viewer" },
+  planNote: { mn: "Дээрээс харсан байдал. Ногоон бүс бол үзэгчдийг суулгахад хамгийн тохиромжтой зай.", en: "Seen from above. The green band is the best distance to seat the audience." },
   pcs: { mn: "ш", en: "pcs" },
 } satisfies Record<string, Text>;
 
@@ -109,6 +141,10 @@ export default function LedCalculator({ lang }: { lang: Locale }) {
   const [pitch, setPitch] = useState(2.5);
   const [nearIn, setNearIn] = useState("");
   const [img, setImg] = useState<string | null>(null);
+  const [view, setView] = useState<View>("2d");
+  const [eyeMode, setEyeMode] = useState(0);
+  const [webgl, setWebgl] = useState(true);
+  useEffect(() => setWebgl(hasWebGL()), []);
 
   const cabinets = CABINETS.filter((c) => c.env.includes(env));
   const pitches = PITCHES[env];
@@ -261,6 +297,32 @@ export default function LedCalculator({ lang }: { lang: Locale }) {
       <section aria-live="polite" className="min-w-0">
         <h2 className="sr-only">{t(L.result, lang)}</h2>
         <figure className="overflow-hidden rounded-lg border border-line bg-white">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-3 py-2">
+            <div className="inline-flex rounded-md bg-line/60 p-1" role="tablist" aria-label={t(L.views, lang)}>
+              {([["2d", L.v2d], ["3d", L.v3d], ["plan", L.vPlan]] as [View, Text][]).map(([v, label]) => (
+                <button
+                  key={v}
+                  type="button"
+                  role="tab"
+                  aria-selected={view === v}
+                  disabled={v === "3d" && !webgl}
+                  title={v === "3d" && !webgl ? t(L.no3d, lang) : undefined}
+                  onClick={() => setView(v)}
+                  className={seg(view === v) + " disabled:opacity-40"}
+                >
+                  {t(label, lang)}
+                </button>
+              ))}
+            </div>
+            {view === "3d" && (
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setEyeMode((n) => n + 1)} className="rounded-md border border-line bg-white px-3 py-1.5 text-sm font-medium hover:border-ink">
+                  {t(L.eye, lang)}
+                </button>
+              </div>
+            )}
+          </div>
+          {view === "2d" && (
           <svg
             viewBox={`0 0 ${sceneW} ${sceneH}`}
             className="block h-auto w-full bg-[linear-gradient(#f9fafb,#eef1f4)]"
@@ -328,6 +390,26 @@ export default function LedCalculator({ lang }: { lang: Locale }) {
               />
             </g>
           </svg>
+          )}
+          {view === "3d" && (
+            <div className="relative aspect-[4/3] w-full sm:aspect-[16/10]">
+              <LedScene3D
+                realW={r.realW}
+                realH={r.realH}
+                cols={r.cols}
+                rows={r.rows}
+                bottom={0.25}
+                image={img}
+                eyeDistance={near > 0 ? near : vMin * 2}
+                eyeMode={eyeMode}
+                zoneMin={vMin}
+                zoneBest={[vMin * 2, vMin * 3]}
+                labels={{ tooClose: t(L.tooClose, lang), best: t(L.best, lang), person: t(L.person, lang) }}
+              />
+              <p className="pointer-events-none absolute bottom-2 left-3 rounded-sm bg-white/80 px-1.5 py-0.5 text-xs text-steel">{t(L.drag, lang)}</p>
+            </div>
+          )}
+          {view === "plan" && <LedPlan lang={lang} realW={r.realW} vMin={vMin} near={near > 0 ? near : 0} />}
           <figcaption className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3 text-sm text-steel">
             <span className="flex flex-wrap gap-x-4">
               <span className="font-medium text-ink">
@@ -393,6 +475,65 @@ export default function LedCalculator({ lang }: { lang: Locale }) {
           <span className="text-sm text-steel">{t(L.sendHint, lang)}</span>
         </div>
       </section>
+    </div>
+  );
+}
+
+/* Top-down plan: the screen on the left, distance running to the right, the viewer if given. */
+function LedPlan({ lang, realW, vMin, near }: { lang: Locale; realW: number; vMin: number; near: number }) {
+  const depth = Math.max(vMin * 3 + 1, near + 1, 4);
+  const W = 720;
+  const left = 70;
+  const s = Math.min((W - left - 30) / depth, 240 / realW); // px per metre, same on both axes
+  const top = 36;
+  const H = Math.round(realW * s + top + 46);
+  const step = depth > 24 ? 5 : depth > 12 ? 2 : 1;
+  const ticks = Array.from({ length: Math.floor(depth / step) + 1 }, (_, i) => i * step);
+  const band = (from: number, to: number, fill: string, label: Text) => (
+    <g>
+      <rect x={left + from * s} y={top} width={(to - from) * s} height={realW * s} fill={fill} />
+      <text x={left + from * s + 6} y={top + 16} fontSize="12" fill="#17212c">
+        {t(label, lang)}
+      </text>
+      <text x={left + from * s + 6} y={top + 31} fontSize="11" fill="#5a6776">
+        {fmt(from, 1)}–{fmt(to, 1)} {t(L.m, lang)}
+      </text>
+    </g>
+  );
+  return (
+    <div>
+      <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full bg-white" role="img" aria-label={t(L.planNote, lang)}>
+        {band(0, vMin, "rgba(225,29,72,0.14)", L.tooClose)}
+        {band(vMin, vMin * 2, "rgba(234,179,8,0.14)", L.okZone)}
+        {band(vMin * 2, vMin * 3, "rgba(5,150,105,0.2)", L.best)}
+        {/* screen */}
+        <rect x={left - 8} y={top} width="8" height={realW * s} fill="#17212c" />
+        <text x={left - 14} y={top + (realW * s) / 2} fontSize="12" textAnchor="end" fill="#17212c">
+          {t(L.screen, lang)}
+        </text>
+        <text x={left - 14} y={top + (realW * s) / 2 + 15} fontSize="11" textAnchor="end" fill="#5a6776">
+          {fmt(realW)} {t(L.m, lang)}
+        </text>
+        {/* distance scale */}
+        {ticks.map((i) => (
+          <g key={i}>
+            <line x1={left + i * s} x2={left + i * s} y1={top + realW * s + 4} y2={top + realW * s + 10} stroke="#9aa5b1" />
+            <text x={left + i * s} y={top + realW * s + 24} fontSize="11" textAnchor="middle" fill="#5a6776">
+              {i} {t(L.m, lang)}
+            </text>
+          </g>
+        ))}
+        {near > 0 && (
+          <g>
+            <line x1={left + near * s} x2={left + near * s} y1={top} y2={top + realW * s} stroke="#0077b6" strokeDasharray="4 4" />
+            <circle cx={left + near * s} cy={top + (realW * s) / 2} r="7" fill="#0077b6" />
+            <text x={left + near * s} y={top - 10} fontSize="12" textAnchor="middle" fill="#0077b6">
+              {t(L.viewer, lang)} {fmt(near, 1)} {t(L.m, lang)}
+            </text>
+          </g>
+        )}
+      </svg>
+      <p className="px-4 pb-3 text-sm text-steel">{t(L.planNote, lang)}</p>
     </div>
   );
 }
