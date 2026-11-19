@@ -3,35 +3,57 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { company, pages, ui, type Locale } from "@/content/site";
+import { company, pages, ui, type Locale, type Text } from "@/content/site";
 import { href, otherLocale, t } from "@/lib/i18n";
 import Logo from "@/components/Logo";
+
+// Interactive planning tools, grouped under one menu.
+const TOOLS: { path: string[]; title: Text; desc: Text }[] = [
+  {
+    path: ["studio"],
+    title: { mn: "Тайзны 3D төлөвлөгч", en: "3D stage planner" },
+    desc: { mn: "Заал, тайз, тоног төхөөрөмж, кабелиа төлөвлөх", en: "Plan hall, stage, equipment and cabling" },
+  },
+  {
+    path: ["led-calculator"],
+    title: { mn: "LED тооцоолуур", en: "LED calculator" },
+    desc: { mn: "Кабинетын тоо, нягтрал, харах зай", en: "Cabinets, resolution, viewing distance" },
+  },
+  {
+    path: ["solutions", "corporate", "conference-rooms"],
+    title: { mn: "Хурлын танхим төлөвлөх", en: "Meeting room planner" },
+    desc: { mn: "Хүний тоогоор өрөөний багц, 3D", en: "Room packages by headcount, in 3D" },
+  },
+];
+const TOOLS_LABEL: Text = { mn: "Төлөвлөх хэрэгсэл", en: "Planning tools" };
 
 export default function SiteHeader({ lang }: { lang: Locale }) {
   const pathname = usePathname() || `/${lang}/`;
   const [open, setOpen] = useState(false);
-  const [solutionsOpen, setSolutionsOpen] = useState(false);
-  const solutionsRef = useRef<HTMLLIElement>(null);
+  const [menu, setMenu] = useState<"solutions" | "tools" | null>(null);
+  const navRef = useRef<HTMLUListElement>(null);
 
   const switchHref = pathname.replace(/^\/(mn|en)(?=\/|$)/, `/${otherLocale(lang)}`);
-  const NAV_ORDER = ["solutions", "studio", "led-calculator", "projects", "about", "partners"];
-  const nav = NAV_ORDER.map((slug) => pages.find((p) => p.slug === slug && p.inNav)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const NAV_ORDER = ["solutions", "tools", "projects", "about", "partners"];
+  const nav = NAV_ORDER.map((slug) => (slug === "tools" ? { slug: "tools", title: TOOLS_LABEL } : pages.find((p) => p.slug === slug && p.inNav))).filter(
+    (p): p is NonNullable<typeof p> => Boolean(p),
+  );
   const solutions = pages.find((p) => p.slug === "solutions");
 
   useEffect(() => {
     setOpen(false);
-    setSolutionsOpen(false);
+    setMenu(null);
   }, [pathname]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setOpen(false);
-        setSolutionsOpen(false);
+        setMenu(null);
       }
     }
     function onClick(e: MouseEvent) {
-      if (solutionsRef.current && !solutionsRef.current.contains(e.target as Node)) setSolutionsOpen(false);
+      if (navRef.current && !navRef.current.contains(e.target as Node)) setMenu(null);
     }
     document.addEventListener("keydown", onKey);
     document.addEventListener("click", onClick);
@@ -42,6 +64,7 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
   }, []);
 
   const isActive = (slug: string) => pathname.startsWith(`/${lang}/${slug}`);
+  const toolActive = TOOLS.some((x) => pathname.startsWith(`/${lang}/${x.path.join("/")}`));
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-line">
@@ -51,21 +74,21 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
         </Link>
 
         <nav className="ml-auto hidden lg:block" aria-label="Main">
-          <ul className="flex items-center gap-1">
+          <ul className="flex items-center gap-1" ref={navRef}>
             {nav.map((p) =>
               p.slug === "solutions" && solutions ? (
-                <li key={p.slug} className="relative" ref={solutionsRef}>
+                <li key={p.slug} className="relative">
                   <button
                     type="button"
                     className={`whitespace-nowrap px-3 py-2 text-sm font-medium hover:text-brand ${isActive(p.slug) ? "text-brand" : ""}`}
-                    aria-expanded={solutionsOpen}
+                    aria-expanded={menu === "solutions"}
                     aria-controls="solutions-menu"
-                    onClick={() => setSolutionsOpen((v) => !v)}
+                    onClick={() => setMenu((v) => (v === "solutions" ? null : "solutions"))}
                   >
                     {t(p.title, lang)}
                     <span aria-hidden="true" className="ml-1 inline-block text-steel">▾</span>
                   </button>
-                  {solutionsOpen && (
+                  {menu === "solutions" && (
                     <div
                       id="solutions-menu"
                       className="absolute left-0 top-full mt-2 w-60 rounded-md border border-line bg-white py-2 shadow-[0_12px_32px_-12px_rgba(23,33,44,0.25)]"
@@ -78,6 +101,36 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
                               className="block px-4 py-2.5 text-sm hover:bg-paper hover:text-brand"
                             >
                               {t(group.title, lang)}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+              ) : p.slug === "tools" ? (
+                <li key={p.slug} className="relative">
+                  <button
+                    type="button"
+                    className={`whitespace-nowrap px-3 py-2 text-sm font-medium hover:text-brand ${toolActive ? "text-brand" : ""}`}
+                    aria-expanded={menu === "tools"}
+                    aria-controls="tools-menu"
+                    onClick={() => setMenu((v) => (v === "tools" ? null : "tools"))}
+                  >
+                    {t(TOOLS_LABEL, lang)}
+                    <span aria-hidden="true" className="ml-1 inline-block text-steel">▾</span>
+                  </button>
+                  {menu === "tools" && (
+                    <div
+                      id="tools-menu"
+                      className="absolute left-0 top-full mt-2 w-80 rounded-md border border-line bg-white py-2 shadow-[0_12px_32px_-12px_rgba(23,33,44,0.25)]"
+                    >
+                      <ul>
+                        {TOOLS.map((x) => (
+                          <li key={x.path.join("/")}>
+                            <Link href={href(lang, x.path)} className="group block px-4 py-2.5 hover:bg-paper">
+                              <span className="block text-sm font-medium group-hover:text-brand">{t(x.title, lang)}</span>
+                              <span className="block text-xs text-steel">{t(x.desc, lang)}</span>
                             </Link>
                           </li>
                         ))}
@@ -139,10 +192,25 @@ export default function SiteHeader({ lang }: { lang: Locale }) {
             <ul className="space-y-1">
               {nav.map((p) => (
                 <li key={p.slug}>
-                  <Link href={href(lang, [p.slug])} className="block py-2 font-display text-lg">
-                    {t(p.title, lang)}
-                  </Link>
-                  {p.slug === "solutions" && (
+                  {p.slug === "tools" ? (
+                    <>
+                      <span className="block py-2 font-display text-lg">{t(TOOLS_LABEL, lang)}</span>
+                      <ul className="mb-2 ml-3 border-l border-line pl-3">
+                        {TOOLS.map((x) => (
+                          <li key={x.path.join("/")}>
+                            <Link href={href(lang, x.path)} className="block py-1.5 text-steel">
+                              {t(x.title, lang)}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <Link href={href(lang, [p.slug])} className="block py-2 font-display text-lg">
+                      {t(p.title, lang)}
+                    </Link>
+                  )}
+                  {p.slug === "solutions" && "children" in p && (
                     <ul className="mb-2 ml-3 border-l border-line pl-3">
                       {p.children?.map((g) => (
                         <li key={g.slug}>
