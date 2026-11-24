@@ -68,7 +68,14 @@ export const pages: PageNode[] = [
               en: "Recording, podcast and post-production studio equipment.",
             },
           },
-          { slug: "proav-others", title: tbd, summary: tbd },
+          {
+            slug: "stage-studio-lighting",
+            title: { mn: "Тайз, студийн гэрэлтүүлэг", en: "Stage & Studio Lighting" },
+            summary: {
+              mn: "Тайз, концерт, телевиз, кино продакшны мэргэжлийн гэрэлтүүлэг.",
+              en: "Professional lighting for stages, concerts, TV studios and film sets.",
+            },
+          },
         ],
       },
       {
@@ -173,7 +180,6 @@ export const pages: PageNode[] = [
       mn: "Бидний суурилуулсан систем, хэрэгжүүлсэн төслүүд.",
       en: "Systems we have designed and installed.",
     },
-    contentOwner: { mn: "8 төслийн тайлбар, зураг — Борлуулалт/Маркетинг", en: "8 case studies with photos — Sales/Marketing" },
   },
   {
     slug: "about",
@@ -196,8 +202,11 @@ export const pages: PageNode[] = [
   },
   {
     slug: "news",
-    title: { mn: "Мэдээ", en: "News" },
-    summary: { mn: "Шинэ бүтээгдэхүүн, төсөл, арга хэмжээ.", en: "New products, projects and events." },
+    title: { mn: "Мэдээ, арга хэмжээ", en: "News & Events" },
+    summary: {
+      mn: "Бидний зохион байгуулсан үзэсгэлэн, семинар, арга хэмжээ.",
+      en: "Expos, seminars and events we have organised.",
+    },
   },
   {
     slug: "contact",

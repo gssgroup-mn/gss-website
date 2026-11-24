@@ -6,6 +6,9 @@ import LedCalculator from "@/components/LedCalculator";
 import LiveAudioSolution from "@/components/LiveAudioSolution";
 import ConferenceRooms from "@/components/ConferenceRooms";
 import StageStudio from "@/components/studio/StageStudio";
+import ProjectsBrowser from "@/components/ProjectsBrowser";
+import { AboutProfile, ContactDetails, EventsList, SolutionProfile, TranslationNote } from "@/components/Profile";
+import { solutionPages } from "@/content/profile";
 import { findByPath, flatten, locales, ui, type Locale, type Text } from "@/content/site";
 import { href, t } from "@/lib/i18n";
 
@@ -36,6 +39,16 @@ const ownCta = new Set(["studio", "led-calculator", "solutions/proav/live-audio"
 
 // Pages with their own content below the page title, keyed by path.
 const extras: Record<string, (lang: Locale) => React.ReactNode> = {
+  about: (lang) => <AboutProfile lang={lang} />,
+  news: (lang) => <EventsList lang={lang} />,
+  projects: (lang) => (
+    <section className="container-site py-12">
+      <TranslationNote lang={lang} />
+      <div className="mt-6">
+        <ProjectsBrowser lang={lang} />
+      </div>
+    </section>
+  ),
   "led-calculator": (lang) => (
     <section className="container-site py-10 md:py-14">
       <LedCalculator lang={lang} />
@@ -75,8 +88,10 @@ export default async function Page({ params }: Props) {
   const { node, parents, path } = found;
   const children = node.children ?? [];
   const isSolutionLeaf = path[0] === "solutions" && children.length === 0;
-  const extra = extras[path.join("/")];
-  const owner = node.contentOwner ?? (isSolutionLeaf && !extra ? solutionContent : undefined);
+  const key = path.join("/");
+  const extra = extras[key];
+  const profileKey = solutionPages[key];
+  const owner = node.contentOwner ?? (isSolutionLeaf && !extra && !profileKey ? solutionContent : undefined);
   const showForm = formPages.has(node.slug);
 
   return (
@@ -110,6 +125,8 @@ export default async function Page({ params }: Props) {
         </div>
       </section>
 
+      {profileKey && <SolutionProfile k={profileKey} lang={lang} />}
+
       {extra?.(lang)}
 
       {children.length > 0 && (
@@ -137,8 +154,11 @@ export default async function Page({ params }: Props) {
 
       {ownCta.has(path.join("/")) ? null : showForm ? (
         <section className="container-site py-12">
-          <div className="max-w-3xl rounded-md border border-line bg-white p-6 md:p-10">
-            <InquiryForm lang={lang} />
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+            <div className="rounded-md border border-line bg-white p-6 md:p-10">
+              <InquiryForm lang={lang} />
+            </div>
+            <ContactDetails lang={lang} />
           </div>
         </section>
       ) : (

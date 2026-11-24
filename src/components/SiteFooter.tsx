@@ -2,6 +2,7 @@ import Link from "next/link";
 import { company, pages, ui, type Locale } from "@/content/site";
 import { href, t } from "@/lib/i18n";
 import Logo from "@/components/Logo";
+import { ContactDetails } from "@/components/Profile";
 
 const L = {
   tagline: {
@@ -9,10 +10,6 @@ const L = {
     en: "Supplier and integrator of professional audio, video and broadcast systems.",
   },
   contact: { mn: "Холбоо барих", en: "Contact" },
-  pendingContact: {
-    mn: "Хаяг, утас, сошиал хаягийг баталгаажуулж байна.",
-    en: "Address, phone and social links are being confirmed.",
-  },
   group: { mn: "Global Group-ийн компани", en: "A Global Group company" },
 };
 
@@ -67,7 +64,9 @@ export default function SiteFooter({ lang }: { lang: Locale }) {
 
         <div className="md:col-span-3">
           <p className="font-display text-sm font-semibold text-white">{t(L.contact, lang)}</p>
-          <p className="mt-2 text-sm text-white/60">{t(L.pendingContact, lang)}</p>
+          <div className="mt-3">
+            <ContactDetails lang={lang} dark />
+          </div>
         </div>
       </div>
       <div className="border-t border-white/10">

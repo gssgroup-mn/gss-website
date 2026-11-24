@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { pages, ui, type Locale, type Text } from "@/content/site";
 import { href, t } from "@/lib/i18n";
+import { contact, projects } from "@/content/profile";
+import { ProjectCard } from "@/components/Profile";
 
 // Minimalist home page: one idea per section, so a first-time visitor understands at a glance
 // what GSS does and how to get in touch.
@@ -21,6 +23,12 @@ const copy = {
     mn: "Хэрэгцээгээ хэлээрэй — манай инженер ажлын 1 өдөрт холбогдоно.",
     en: "Tell us what you need — an engineer will contact you within one working day.",
   },
+  projectsH: { mn: "Сүүлийн төслүүд", en: "Recent projects" },
+  projectsLead: {
+    mn: "2013 оноос хойш телевиз, музей, их сургууль, төрийн байгууллагад систем суурилуулсан.",
+    en: "Since 2013 we have installed systems for broadcasters, museums, universities and government.",
+  },
+  allProjects: { mn: "Бүх төсөл", en: "All projects" },
   phoneL: { mn: "Утас", en: "Phone" },
   addressL: { mn: "Хаяг", en: "Address" },
   address: {
@@ -30,7 +38,7 @@ const copy = {
 } satisfies Record<string, Text>;
 
 // Text wordmarks until the brand logo files arrive from Marketing.
-const brands = ["Sennheiser", "Blackmagic Design", "TOA", "Mackie", "TASCAM", "K&M"];
+const brands = ["Sennheiser", "Blackmagic Design", "Ross Video", "Panasonic", "ARRI", "TOA", "Taiden", "Mackie"];
 
 export default async function Home({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = await params;
@@ -74,7 +82,25 @@ export default async function Home({ params }: { params: Promise<{ lang: Locale 
         </div>
       </section>
 
-      {/* 3. Brands */}
+      {/* 3. Recent projects */}
+      <section className="border-t border-line bg-white">
+        <div className="container-site py-16 md:py-20">
+          <div className="flex flex-wrap items-baseline justify-between gap-4">
+            <h2 className="text-2xl font-bold text-ink md:text-3xl">{t(copy.projectsH, lang)}</h2>
+            <Link href={href(lang, ["projects"])} className="font-semibold text-brand hover:underline">
+              {t(copy.allProjects, lang)} ({projects.length})
+            </Link>
+          </div>
+          <p className="mt-3 max-w-2xl text-steel">{t(copy.projectsLead, lang)}</p>
+          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[25, 22, 15].map((id) => (
+              <ProjectCard key={id} id={id} />
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 4. Brands */}
       <section className="border-t border-line bg-white">
         <div className="container-site py-14">
           <h2 className="text-center text-sm font-semibold uppercase tracking-wider text-steel">{t(copy.brandsH, lang)}</h2>
@@ -88,7 +114,7 @@ export default async function Home({ params }: { params: Promise<{ lang: Locale 
         </div>
       </section>
 
-      {/* 4. Contact */}
+      {/* 5. Contact */}
       <section className="border-t border-line bg-paper">
         <div className="container-site grid gap-10 py-16 md:grid-cols-2 md:py-20">
           <div>
@@ -104,9 +130,19 @@ export default async function Home({ params }: { params: Promise<{ lang: Locale 
           <dl className="space-y-6 md:pt-2">
             <div>
               <dt className="text-sm text-steel">{t(copy.phoneL, lang)}</dt>
+              {contact.phones.map((p) => (
+                <dd key={p.tel} className="mt-1 text-lg font-semibold text-ink">
+                  <a href={`tel:${p.tel}`} className="hover:text-brand">
+                    {p.text}
+                  </a>
+                </dd>
+              ))}
+            </div>
+            <div>
+              <dt className="text-sm text-steel">Email</dt>
               <dd className="mt-1 text-lg font-semibold text-ink">
-                <a href="tel:+97675115151" className="hover:text-brand">
-                  +976 7511-5151
+                <a href={`mailto:${contact.email}`} className="hover:text-brand">
+                  {contact.email}
                 </a>
               </dd>
             </div>
