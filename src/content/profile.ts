@@ -68,51 +68,68 @@ export const approach = [
   },
 ];
 
-export type Milestone = { year: string; title?: string; body: string; gss?: boolean };
+export type Milestone = {
+  year: string;
+  title: string;
+  items: string[];
+  /** "group" = Global Telecom / Global Negdel before GSS; "gss" = GSS from 2015 */
+  era: "group" | "gss";
+};
 
-/** Group history before GSS was founded (Global Telecom / Global Negdel). */
-export const groupHistory: Milestone[] = [
-  { year: "1991", body: "One of the first IT companies established in Mongolia." },
-  { year: "1993", body: "Imported the first PBX from Panasonic." },
+/** Company history, one card per year (from the profile deck). */
+export const history: Milestone[] = [
+  { year: "1991", era: "group", title: "The beginning", items: ["One of the first IT companies established in Mongolia."] },
   {
     year: "1993",
-    title: "Intercom system station",
-    body: "Designed and manufactured the first PBX in Mongolia, installed in 21 aimags and 3 cities.",
+    era: "group",
+    title: "First PBX",
+    items: [
+      "Imported the first PBX from Panasonic.",
+      "Intercom system station: designed and manufactured the first PBX in Mongolia, installed in 21 aimags and 3 cities.",
+    ],
   },
-  { year: "2001", body: "Established to distribute Panasonic consumer products to the Mongolian market." },
-  { year: "2007", body: "Established and opened the first Panasonic service center in Mongolia." },
-  { year: "2008", body: "Started to distribute home appliances officially." },
+  { year: "2001", era: "group", title: "Panasonic", items: ["Established to distribute Panasonic consumer products to the Mongolian market."] },
+  { year: "2007", era: "group", title: "Service center", items: ["Established and opened the first Panasonic service center in Mongolia."] },
+  { year: "2008", era: "group", title: "Home appliances", items: ["Started to distribute home appliances officially."] },
   {
     year: "2012–2013",
+    era: "group",
     title: "TV & broadcasting business",
-    body: "Started the broadcast and professional audio-video business. Transformed the MNB studio and TV master control system into HD.",
+    items: [
+      "Started the broadcast and professional audio-video business.",
+      "Transformed the MNB studio and TV master control system into HD.",
+    ],
   },
-  {
-    year: "2014",
-    title: "MNB OB van",
-    body: "Solution, integration and installation of Mongolia's first fibre-optic camera OB van.",
-  },
-];
-
-/** GSS milestones from its founding in 2015. */
-export const gssHistory: Milestone[] = [
-  { year: "2015", body: "Global Telecom LLC established GSS to broaden its business scope.", gss: true },
+  { year: "2014", era: "group", title: "MNB OB van", items: ["Solution, integration and installation of Mongolia's first fibre-optic camera OB van."] },
   {
     year: "2015",
-    title: "Nomads of the Steppes — The Silk Road",
-    body: "Sponsored the Chinese–Mongolian exhibition dedicated to the 10th anniversary of archaeological research with Panasonic visual products.",
+    era: "gss",
+    title: "GSS is founded",
+    items: [
+      "Global Telecom LLC established GSS to broaden its business scope.",
+      "Nomads of the Steppes — The Silk Road: sponsored the Chinese–Mongolian exhibition for the 10th anniversary of archaeological research with Panasonic visual products.",
+    ],
   },
   {
     year: "2015–2016",
-    body: "Entered the content production business as an official distributor of ARRI, the leading brand of motion picture cameras and lighting.",
+    era: "gss",
+    title: "Content production",
+    items: ["Entered the content production business as an official distributor of ARRI, the leading brand of motion picture cameras and lighting."],
   },
-  { year: "2018", body: "Solution, integration and installation of the audio and video system for MNB's new studio (MNB World)." },
-  { year: "2018", body: "Became the official exclusive distributor of Sennheiser." },
-  { year: "2020", body: "Became the official exclusive distributor of Mackie." },
-  { year: "2021", body: "Global Negdel was established, bringing together GT, GE, GSS and GTE." },
-  { year: "2022", body: "Became an official authorised distributor of Music Tribe and Universal Audio." },
-  { year: "2024", body: "Became an official distributor of Sennheiser–Sonova Consumer Hearing." },
-  { year: "2025", body: "GSS celebrated its 10th anniversary.", gss: true },
+  {
+    year: "2018",
+    era: "gss",
+    title: "MNB World & Sennheiser",
+    items: [
+      "Solution, integration and installation of the audio and video system for MNB's new studio.",
+      "Became the official exclusive distributor of Sennheiser.",
+    ],
+  },
+  { year: "2020", era: "gss", title: "Mackie", items: ["Became the official exclusive distributor of Mackie."] },
+  { year: "2021", era: "gss", title: "Global Negdel", items: ["Global Negdel was established, bringing together GT, GE, GSS and GTE."] },
+  { year: "2022", era: "gss", title: "Music Tribe & Universal Audio", items: ["Became an official authorised distributor of Music Tribe and Universal Audio, leading brands in the audio industry."] },
+  { year: "2024", era: "gss", title: "Consumer hearing", items: ["Became an official distributor of Sennheiser–Sonova Consumer Hearing."] },
+  { year: "2025", era: "gss", title: "10th anniversary", items: ["GSS celebrated its 10th anniversary."] },
 ];
 
 export type SolutionText = { title: string; paragraphs: string[]; includes?: string[]; brands: string[] };

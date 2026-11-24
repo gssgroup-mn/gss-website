@@ -7,18 +7,16 @@ import {
   eventImage,
   events,
   groupDirections,
-  groupHistory,
-  gssHistory,
   mission,
   projectImage,
   projects,
   solutionText,
   vision,
-  type Milestone,
   type SolutionKey,
 } from "@/content/profile";
 import { basePath, href } from "@/lib/i18n";
 import PendingNote from "@/components/PendingNote";
+import HistoryCarousel from "@/components/HistoryCarousel";
 
 const translation: Text = {
   mn: "Монгол орчуулга — ахлах борлуулалтын менежер илгээнэ",
@@ -49,9 +47,6 @@ const L = {
     mn: "Санаанаас эхлээд ашиглалт хүртэл төслийг хэрхэн амжилттай хэрэгжүүлдэг вэ.",
     en: "How we deliver successful projects from concept to completion.",
   },
-  history: { mn: "Түүх", en: "Our history" },
-  groupYears: { mn: "Группийн түүх, 1991–2014", en: "The group, 1991–2014" },
-  gssYears: { mn: "GSS, 2015 оноос", en: "GSS, since 2015" },
   contact: { mn: "Холбоо барих", en: "Contact" },
 };
 
@@ -146,23 +141,6 @@ export function SolutionProfile({ k, lang }: { k: SolutionKey; lang: Locale }) {
   );
 }
 
-function Timeline({ items, accent }: { items: Milestone[]; accent: string }) {
-  return (
-    <ol className="relative mt-6 space-y-6 border-l border-line pl-6" lang="en">
-      {items.map((m, i) => (
-        <li key={i} className="relative">
-          <span className={`absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border-2 border-white ${accent}`} aria-hidden="true" />
-          <p className="font-bold text-ink">
-            {m.year}
-            {m.title && <span className="font-semibold text-steel">, {m.title}</span>}
-          </p>
-          <p className="mt-1 text-ink/85">{m.body}</p>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
 export function AboutProfile({ lang }: { lang: Locale }) {
   return (
     <>
@@ -204,21 +182,9 @@ export function AboutProfile({ lang }: { lang: Locale }) {
         </div>
       </section>
 
-      <section className="container-site py-12 md:py-16">
-        <h2 className="text-2xl font-bold">{L.history[lang]}</h2>
-        <div className="mt-4 grid gap-12 md:grid-cols-2">
-          <div>
-            <h3 className="text-lg font-bold text-steel">{L.groupYears[lang]}</h3>
-            <Timeline items={groupHistory} accent="bg-steel" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-brand">{L.gssYears[lang]}</h3>
-            <Timeline items={gssHistory} accent="bg-brand" />
-          </div>
-        </div>
-      </section>
+      <HistoryCarousel lang={lang} />
 
-      <section className="border-t border-line bg-white">
+      <section className="bg-white">
         <div className="container-site py-12 md:py-16">
           <h2 className="text-2xl font-bold">{L.group[lang]}</h2>
           <p className="mt-2 text-steel">{L.groupLead[lang]}</p>
