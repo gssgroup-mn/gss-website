@@ -6,7 +6,6 @@ import {
   contact,
   eventImage,
   events,
-  groupDirections,
   mission,
   projectImage,
   projects,
@@ -36,12 +35,6 @@ const L = {
   vision: { mn: "Алсын хараа", en: "Vision" },
   mission: { mn: "Эрхэм зорилго", en: "Mission" },
   whatWeDo: { mn: "Бидний үйл ажиллагаа", en: "What we do" },
-  group: { mn: "Глобал Нэгдэл группийн чиглэлүүд", en: "Global Negdel group directions" },
-  groupLead: {
-    mn: "GSS нь Глобал Нэгдэл группийн соёл, бүтээлч салбарыг хариуцдаг компани.",
-    en: "GSS is the Global Negdel company for the cultural and creative industry.",
-  },
-  gssHere: { mn: "GSS", en: "GSS" },
   approach: { mn: "Бидний ажлын арга барил", en: "Our approach" },
   approachLead: {
     mn: "Санаанаас эхлээд ашиглалт хүртэл төслийг хэрхэн амжилттай хэрэгжүүлдэг вэ.",
@@ -183,27 +176,6 @@ export function AboutProfile({ lang }: { lang: Locale }) {
       </section>
 
       <HistoryCarousel lang={lang} />
-
-      <section className="bg-white">
-        <div className="container-site py-12 md:py-16">
-          <h2 className="text-2xl font-bold">{L.group[lang]}</h2>
-          <p className="mt-2 text-steel">{L.groupLead[lang]}</p>
-          <ul className="mt-8 grid gap-4 md:grid-cols-4" lang="en">
-            {groupDirections.map((d) => (
-              <li
-                key={d.title}
-                className={`rounded-lg border p-5 ${d.gss ? "border-brand bg-brand/5" : "border-line bg-paper"}`}
-              >
-                <h3 className="font-bold">
-                  {d.title}
-                  {d.gss && <span className="ml-2 rounded bg-brand px-1.5 py-0.5 text-xs font-semibold text-white">GSS</span>}
-                </h3>
-                <p className="mt-2 text-sm text-ink/75">{d.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
     </>
   );
 }

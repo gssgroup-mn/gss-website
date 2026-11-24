@@ -29,26 +29,6 @@ export const activities = [
   "Public address (PA) systems",
 ];
 
-/** The four directions of the Global Negdel group; GSS belongs to the cultural & creative one. */
-export const groupDirections = [
-  { title: "Healthy lifestyle", body: "Batteries, air conditioning, health tech products", gss: false },
-  {
-    title: "Technology innovation",
-    body: "Integrated and radio communications, networks, IT infrastructure, surveillance and security, workforce management",
-    gss: false,
-  },
-  {
-    title: "Cultural & creative industry",
-    body: "Broadcast, film production, professional audio, display systems, conference and collaboration, professional lighting",
-    gss: true,
-  },
-  {
-    title: "Sustainable development goals",
-    body: "Smart infrastructure, energy-efficient technologies, digital transformation, sustainable growth",
-    gss: false,
-  },
-];
-
 export const approach = [
   {
     title: "Understanding our clients",
